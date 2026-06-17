@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cerveza Zulia - Encuestas y Recompensas</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Meta tags for Premium SEO -->
+    <meta name="description" content="Plataforma interactiva de encuestas de Cerveza Zulia. Responde cuestionarios, acumula puntos y canjea premios reales.">
+    <meta name="theme-color" content="#050b14">
+</head>
+<body>
+
+    <!-- Container wrapper simulator for desktop screens -->
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
+        <div style="text-align: center; margin-bottom: 15px; display: none;" class="desktop-instructions">
+            <h1 style="color: var(--accent-color); font-size: 1.8rem; text-shadow: 0 0 10px rgba(255,203,5,0.2); margin-bottom: 5px;">Simulador Móvil Zulia</h1>
+            <p style="color: var(--text-secondary); font-size: 0.85rem;">Prueba la experiencia de la plataforma de encuestas en tiempo real.</p>
+        </div>
+
+        <div class="app-container">
+            <!-- Toast notification container -->
+            <div id="toast-container" class="toast-container"></div>
+
+            <!-- ========================================== -->
+            <!-- 1. LOGIN SCREEN -->
+            <!-- ========================================== -->
+            <div id="login" class="screen screen-auth active">
+                <div class="screen-content" style="display: flex; flex-direction: column;">
+                    <div class="login-header">
+                        <!-- Custom Vector Zulia Eagle Logo -->
+                        <svg class="login-logo-img" viewBox="0 0 120 120" style="fill: var(--accent-color); width: 100px; height: 100px;">
+                            <path d="M60 10 C 40 25, 25 35, 10 40 C 25 50, 45 50, 60 45 C 75 50, 95 50, 110 40 C 95 35, 80 25, 60 10 Z"/>
+                            <path d="M60 45 L50 70 L70 70 Z M60 70 L40 100 L80 100 Z" style="opacity: 0.8;"/>
+                            <circle cx="60" cy="55" r="4" style="fill: #000;"/>
+                            <text x="60" y="112" font-family="'Outfit', sans-serif" font-weight="900" font-size="16" text-anchor="middle" letter-spacing="2">ZULIA</text>
+                        </svg>
+                        <h1 class="zulia-title">Zulia</h1>
+                        <p class="login-tagline">"Responde encuestas, acumula puntos y canjea premios reales."</p>
+                    </div>
+
+                    <form id="login-form">
+                        <div class="form-group">
+                            <label for="login-user">Correo electrónico o teléfono</label>
+                            <div class="input-wrapper">
+                                <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                                <input type="text" id="login-user" class="form-control" placeholder="nombre@correo.com" value="juan@email.com" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="login-pass">Contraseña</label>
+                            <div class="input-wrapper">
+                                <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                                <input type="password" id="login-pass" class="form-control" placeholder="••••••••" value="123456" required>
+                            </div>
+                        </div>
+
+                        <div style="text-align: right; margin-bottom: 20px;">
+                            <a href="#" style="font-size: 0.76rem; color: var(--accent-color); text-decoration: none;" onclick="showToast('Enlace de recuperación enviado al correo', 'success')">¿Olvidaste tu contraseña?</a>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" style="margin-bottom: 12px;">Iniciar sesión</button>
+                        <button type="button" class="btn btn-outline" onclick="navigateTo('register')">Crear cuenta</button>
+                    </form>
+
+                    <div style="text-align: center; color: var(--text-muted); font-size: 0.75rem; margin: 15px 0 10px;">o continúa con</div>
+                    <div class="social-login">
+                        <button class="social-btn" onclick="showToast('Ingreso con Google simulado', 'success')">
+                            <svg viewBox="0 0 24 24" style="fill: #EA4335;"><path d="M12.24 10.285V14.4h6.887c-.648 2.41-2.519 4.114-5.136 4.114-3.51 0-6.377-2.87-6.377-6.38s2.867-6.38 6.377-6.38c1.5 0 2.923.518 4.004 1.5l3.136-3.136C19.123 2.146 15.86 1 12.24 1c-6.09 0-11 4.91-11 11s4.91 11 11 11c5.805 0 10.636-4.105 10.636-10.618 0-.585-.052-1.077-.136-1.514H12.24z"/></svg>
+                        </button>
+                        <button class="social-btn" onclick="showToast('Ingreso con Facebook simulado', 'success')">
+                            <svg viewBox="0 0 24 24" style="fill: #1877F2;"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                        </button>
+                    </div>
+
+                    <div class="login-footer-beer">
+                        <!-- We will load our generated Zulia beer bottles photo from assets/workspace -->
+                        <img src="zulia_bottles_ice.png" alt="Cerveza Zulia" onerror="this.src='https://images.unsplash.com/photo-1600788886242-5c96aabe3757?auto=format&fit=crop&q=80&w=300'">
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- 2. REGISTRATION SCREEN -->
+            <!-- ========================================== -->
+            <div id="register" class="screen screen-auth">
+                <div class="screen-content">
+                    <div style="margin-bottom: 24px; text-align: center;">
+                        <h2 style="color: var(--accent-color); font-size: 1.5rem; margin-bottom: 4px;">Crear cuenta</h2>
+                        <p style="font-size: 0.8rem; color: var(--text-secondary);">Regístrate para empezar a acumular puntos</p>
+                    </div>
+
+                    <form id="register-form">
+                        <div class="form-group">
+                            <label for="reg-name">Nombre completo</label>
+                            <input type="text" id="reg-name" class="form-control form-control-no-icon" placeholder="Juan Pérez" required>
+                        </div>
+
+                        <div class="auth-grid">
+                            <div class="form-group">
+                                <label for="reg-cedula">Cédula / ID</label>
+                                <input type="text" id="reg-cedula" class="form-control form-control-no-icon" placeholder="12345678" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="reg-dob">F. de nacimiento</label>
+                                <input type="date" id="reg-dob" class="form-control form-control-no-icon" required>
+                            </div>
+                        </div>
+
+                        <div class="auth-grid">
+                            <div class="form-group">
+                                <label for="reg-gender">Sexo</label>
+                                <select id="reg-gender" class="form-control form-control-no-icon" style="background-image: none;" required>
+                                    <option value="M">Masculino</option>
+                                    <option value="F">Femenino</option>
+                                    <option value="O">Otro</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="reg-country">País</label>
+                                <select id="reg-country" class="form-control form-control-no-icon" required>
+                                    <option value="VE">Venezuela</option>
+                                    <option value="CO">Colombia</option>
+                                    <option value="ES">España</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="reg-city">Ciudad</label>
+                            <input type="text" id="reg-city" class="form-control form-control-no-icon" placeholder="Maracaibo" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="reg-email">Correo electrónico</label>
+                            <input type="email" id="reg-email" class="form-control form-control-no-icon" placeholder="juan@email.com" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="reg-phone">Teléfono móvil</label>
+                            <input type="tel" id="reg-phone" class="form-control form-control-no-icon" placeholder="+58 412 1234567" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="reg-pass">Contraseña</label>
+                            <input type="password" id="reg-pass" class="form-control form-control-no-icon" placeholder="••••••••" required>
+                        </div>
+
+                        <label class="form-checkbox">
+                            <input type="checkbox" required>
+                            <span>Acepto los <a href="#">términos y condiciones</a> de Cerveza Zulia.</span>
+                        </label>
+
+                        <button type="submit" class="btn btn-primary" style="margin-bottom: 12px;">Registrarme</button>
+                        <button type="button" class="btn btn-secondary" onclick="navigateTo('login')">¿Ya tienes cuenta? Inicia sesión</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- 2.1 VERIFICATION SCREEN -->
+            <!-- ========================================== -->
+            <div id="verification" class="screen screen-auth">
+                <div class="screen-content">
+                    <div class="verification-box">
+                        <div class="verification-icon-wrapper">
+                            <svg viewBox="0 0 24 24" style="width: 32px; height: 32px; fill: currentColor;"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                        </div>
+                        <h2 style="color: var(--accent-color); font-size: 1.4rem; margin-bottom: 8px;">Código de Verificación</h2>
+                        <p style="font-size: 0.8rem; color: var(--text-secondary); max-width: 260px;">Hemos enviado un código de seguridad de 6 dígitos a su correo <strong>juan@email.com</strong></p>
+
+                        <form id="verification-form">
+                            <div class="pin-inputs">
+                                <input type="text" class="pin-field" maxlength="1" pattern="[0-9]" required>
+                                <input type="text" class="pin-field" maxlength="1" pattern="[0-9]" required>
+                                <input type="text" class="pin-field" maxlength="1" pattern="[0-9]" required>
+                                <input type="text" class="pin-field" maxlength="1" pattern="[0-9]" required>
+                                <input type="text" class="pin-field" maxlength="1" pattern="[0-9]" required>
+                                <input type="text" class="pin-field" maxlength="1" pattern="[0-9]" required>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary" style="margin-bottom: 20px;">Verificar Código</button>
+
+                            <p style="font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 12px;">¿No recibiste el código?</p>
+                            <a href="#" style="font-size: 0.8rem; color: var(--accent-color); text-decoration: none; font-weight: 600;" onclick="showToast('Código reenviado', 'success')">Reenviar código (00:45)</a>
+
+                            <div style="margin: 20px 0; border-top: 1px solid var(--border-color); width: 100%;"></div>
+
+                            <a href="#" style="font-size: 0.8rem; color: var(--text-secondary); text-decoration: none;" onclick="showToast('Código SMS enviado', 'success')">También podemos enviarlo por SMS</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- 3. MENU PRINCIPAL (DASHBOARD) -->
+            <!-- ========================================== -->
+            <div id="dashboard" class="screen">
+                <div class="screen-content">
+                    <!-- User Header -->
+                    <div class="dashboard-header">
+                        <div class="user-profile-summary" onclick="navigateTo('profile')" style="cursor: pointer;">
+                            <img class="avatar-circle" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=100" alt="Avatar">
+                            <div class="user-info-text">
+                                <h3 id="dash-user-name">Juan Pérez</h3>
+                                <p id="dash-user-level">Nivel 7 - Explorador</p>
+                            </div>
+                        </div>
+                        <div class="header-actions">
+                            <button class="icon-btn" onclick="navigateTo('notificaciones')">
+                                <svg viewBox="0 0 24 24" style="width: 20px; height: 20px; fill: currentColor;"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+                                <span class="badge-dot" id="notif-badge-dot" style="display: none;"></span>
+                            </button>
+                            <button class="icon-btn" onclick="navigateTo('ayuda')">
+                                <svg viewBox="0 0 24 24" style="width: 20px; height: 20px; fill: currentColor;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm1.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Progress / Experience Card -->
+                    <div class="card progress-card" onclick="navigateTo('levels')" style="cursor: pointer;">
+                        <div class="progress-header">
+                            <div>
+                                <span class="points-label">Saldo actual</span>
+                                <div class="points-display" id="prog-points-total">4.250 <span class="points-label">puntos</span></div>
+                            </div>
+                            <div class="level-badge-container" id="prog-level-title">Nivel 7</div>
+                        </div>
+                        <div class="progress-bar-outer">
+                            <div class="progress-bar-inner" id="prog-bar-inner" style="width: 72%;"></div>
+                        </div>
+                        <div class="progress-footer">
+                            <span id="prog-needed-text">750 puntos para Nivel 8</span>
+                            <span>72%</span>
+                        </div>
+                    </div>
+
+                    <!-- Quick Navigation Grid -->
+                    <div class="quick-links-grid">
+                        <a href="javascript:void(0)" class="quick-link-item" onclick="navigateTo('premios')">
+                            <div class="icon-wrapper">
+                                <svg viewBox="0 0 24 24"><path d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.67C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 14H4V8h16v10z"/></svg>
+                            </div>
+                            <span>Mis Premios</span>
+                        </a>
+                        <a href="javascript:void(0)" class="quick-link-item" onclick="navigateTo('ranking')">
+                            <div class="icon-wrapper">
+                                <svg viewBox="0 0 24 24"><path d="M16 11V3H8v6H2v12h20V11h-6zM10 5h4v14h-4V5zM4 11h4v8H4v-8zm16 8h-4v-6h4v6z"/></svg>
+                            </div>
+                            <span>Ranking</span>
+                        </a>
+                        <a href="javascript:void(0)" class="quick-link-item" onclick="navigateTo('historial')">
+                            <div class="icon-wrapper">
+                                <svg viewBox="0 0 24 24"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
+                            </div>
+                            <span>Historial</span>
+                        </a>
+                        <a href="javascript:void(0)" class="quick-link-item" onclick="navigateTo('referidos')">
+                            <div class="icon-wrapper">
+                                <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                            </div>
+                            <span>Referidos</span>
+                        </a>
+                    </div>
+
+                    <!-- Daily Bonus Prompt -->
+                    <div class="card card-interactive" onclick="navigateTo('daily-bonus')" style="display: flex; align-items: center; gap: 12px; background: linear-gradient(90deg, #12213e 0%, #074735 100%);">
+                        <span style="font-size: 1.6rem;">🎁</span>
+                        <div style="flex-grow: 1;">
+                            <h4 style="font-size: 0.85rem; margin-bottom: 2px;">Bono de asistencia disponible</h4>
+                            <p style="font-size: 0.72rem; color: var(--text-secondary);">Entra a diario para ganar hasta 200 puntos gratis.</p>
+                        </div>
+                        <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: var(--accent-color);"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+                    </div>
+
+                    <!-- Daily Surveys Section -->
+                    <div class="section-header">
+                        <h3>Encuestas del Día</h3>
+                        <a href="javascript:void(0)" class="see-all" onclick="navigateTo('surveys-list')">Ver todas</a>
+                    </div>
+
+                    <div id="dashboard-surveys-list">
+                        <!-- Loaded dynamically via app.js -->
+                    </div>
+
+                    <!-- User Quick Stats Summary Row -->
+                    <div class="section-header" style="margin-top: 24px;">
+                        <h3>Resumen Rápido</h3>
+                    </div>
+                    <div class="summary-grid">
+                        <div class="summary-box">
+                            <div class="value" id="stat-completed-surveys">124</div>
+                            <div class="label">Completadas</div>
+                        </div>
+                        <div class="summary-box">
+                            <div class="value" id="stat-total-points">4.250</div>
+                            <div class="label">Puntos Totales</div>
+                        </div>
+                        <div class="summary-box">
+                            <div class="value" id="stat-rewards-earned">8</div>
+                            <div class="label">Premios Obtenidos</div>
+                        </div>
+                        <div class="summary-box">
+                            <div class="value" id="stat-ranking-pos">#154</div>
+                            <div class="label">Posición Ranking</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- 4. PERFIL DE USUARIO -->
+            <!-- ========================================== -->
+            <div id="profile" class="screen">
+                <div class="sub-header">
+                    <button class="back-btn" onclick="navigateTo('dashboard')">
+                        <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: currentColor;"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+                    </button>
+                    <h2>Perfil de Usuario</h2>
+                    <button class="icon-btn" onclick="navigateTo('login')" style="background-color: var(--danger-color); color: #fff;">
+                        <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; fill: currentColor;"><path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+                    </button>
+                </div>
+                <div class="screen-content">
+                    <div class="profile-hero">
+                        <div class="profile-avatar-wrapper">
+                            <img class="profile-avatar" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150" alt="Juan Pérez">
+                        </div>
+                        <h3 style="font-size: 1.2rem; margin-bottom: 2px;" id="prof-name">Juan Pérez</h3>
+                        <span class="profile-id-tag" id="prof-id">USR-00012345</span>
+                    </div>
+
+                    <div class="card" style="padding: 10px 16px;">
+                        <div class="profile-info-item">
+                            <span class="label">Cédula:</span>
+                            <span class="value" id="prof-cedula">12345678</span>
+                        </div>
+                        <div class="profile-info-item">
+                            <span class="label">Correo:</span>
+                            <span class="value" id="prof-correo">juan@email.com</span>
+                        </div>
+                        <div class="profile-info-item">
+                            <span class="label">Teléfono:</span>
+                            <span class="value" id="prof-telefono">+57 3000000000</span>
+                        </div>
+                        <div class="profile-info-item" style="border-bottom: none;">
+                            <span class="label">Fecha de registro:</span>
+                            <span class="value" id="prof-registro">15/05/2026</span>
+                        </div>
+                    </div>
+
+                    <div class="section-header" style="margin-top: 15px;">
+                        <h3>Estadísticas</h3>
+                    </div>
+                    <div class="summary-grid" style="margin-bottom: 20px;">
+                        <div class="summary-box">
+                            <div class="value" id="prof-stat-level">7</div>
+                            <div class="label">Nivel</div>
+                        </div>
+                        <div class="summary-box">
+                            <div class="value" id="prof-stat-points">4.250</div>
+                            <div class="label">Puntos</div>
+                        </div>
+                        <div class="summary-box">
+                            <div class="value" id="prof-stat-completed">124</div>
+                            <div class="label">Encuestas</div>
+                        </div>
+                        <div class="summary-box">
+                            <div class="value" id="prof-stat-rewards">8</div>
+                            <div class="label">Premios</div>
+                        </div>
+                    </div>
+
+                    <div class="section-header">
+                        <h3>Logros Desbloqueados</h3>
+                    </div>
+                    <div class="badge-row-scroll" id="profile-badges-scroll">
+                        <!-- Loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- 5. PAGINA DE LISTA DE ENCUESTAS -->
+            <!-- ========================================== -->
+            <div id="surveys-list" class="screen">
+                <div class="sub-header">
+                    <button class="back-btn" onclick="navigateTo('dashboard')">
+                        <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: currentColor;"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+                    </button>
+                    <h2>Centro de Encuestas</h2>
+                    <div style="width: 34px;"></div>
+                </div>
+                <div class="screen-content">
+                    <!-- Category selection tabs -->
+                    <div class="tabs-scrollable">
+                        <button class="tab-pill active" onclick="filterSurveys('todas', this)">Todas</button>
+                        <button class="tab-pill" onclick="filterSurveys('nuevas', this)">Nuevas</button>
+                        <button class="tab-pill" onclick="filterSurveys('recomendadas', this)">Recomendadas</button>
+                        <button class="tab-pill" onclick="filterSurveys('mejor-pagadas', this)">Mejor Pagadas</button>
+                        <button class="tab-pill" onclick="filterSurveys('mas-rapidas', this)">Más Rápidas</button>
+                    </div>
+
+                    <div class="survey-list-container" id="surveys-page-list">
+                        <!-- Filled by app.js -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- 6. PAGINA DE ENCUESTA ACTIVA -->
+            <!-- ========================================== -->
+            <div id="survey-active" class="screen">
+                <div class="sub-header">
+                    <button class="back-btn" onclick="navigateTo('surveys-list')">
+                        <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: currentColor;"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+                    </button>
+                    <h2 id="active-survey-title">Encuesta en progreso</h2>
+                    <div style="width: 34px;"></div>
+                </div>
+                <div class="screen-content" style="display: flex; flex-direction: column;">
+                    <!-- Question Step indicator and bar -->
+                    <div class="survey-active-header">
+                        <span class="survey-progress-numerical" id="active-survey-step">Pregunta 1 de 10</span>
+                    </div>
+                    <div class="progress-bar-outer" style="margin-top: 0; margin-bottom: 24px;">
+                        <div class="progress-bar-inner" id="active-survey-progress-bar" style="width: 10%;"></div>
+                    </div>
+
+                    <!-- Interactive survey questions container -->
+                    <div class="survey-active-body" id="active-survey-body">
+                        <!-- Filled by app.js depending on type -->
+                    </div>
+
+                    <button class="btn btn-primary" id="survey-next-btn" onclick="nextSurveyQuestion()" disabled style="margin-top: auto;">Siguiente</button>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- 6.1 ENCUESTA COMPLETADA -->
+            <!-- ========================================== -->
+            <div id="survey-completed" class="screen">
+                <div class="screen-content" style="display: flex; flex-direction: column; justify-content: center;">
+                    <div class="completed-hero">
+                        <div class="completed-check-icon">
+                            <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                        </div>
+                        <h2 style="font-size: 1.6rem; color: var(--text-primary); margin-bottom: 6px;">¡Encuesta completada!</h2>
+                        <div class="reward-points-alert" id="completed-survey-reward">+150 puntos</div>
+                        <p style="color: var(--text-secondary); font-size: 0.85rem; max-width: 250px; line-height: 1.4;">Gracias por tu participación. Tu opinión nos ayuda a seguir ofreciendo la mejor cerveza.</p>
+
+                        <img class="completed-zulia-img" src="zulia_bottles_ice.png" alt="Cerveza Zulia" onerror="this.src='https://images.unsplash.com/photo-1600788886242-5c96aabe3757?auto=format&fit=crop&q=80&w=300'">
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; gap: 10px; margin-top: auto;">
+                        <button class="btn btn-primary" onclick="navigateTo('surveys-list')">Ver más encuestas</button>
+                        <button class="btn btn-outline" onclick="navigateTo('dashboard')">Ir al inicio</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- 7. SISTEMA DE NIVELES SCREEN -->
+            <!-- ========================================== -->
+            <div id="levels" class="screen">
+                <div class="sub-header">
+                    <button class="back-btn" onclick="navigateTo('dashboard')">
+                        <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: currentColor;"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+                    </button>
+                    <h2>Niveles de Membresía</h2>
+                    <div style="width: 34px;"></div>
+                </div>
+                <div class="screen-content" style="padding-top: 15px;">
+                    <div class="card" style="background: linear-gradient(135deg, #11213f 0%, #17382d 100%); border-color: var(--success-color);">
+                        <h4 style="color: var(--accent-color); font-size: 0.95rem; margin-bottom: 6px;">¿Cómo funciona el sistema de niveles?</h4>
+                        <p style="font-size: 0.76rem; color: var(--text-secondary); line-height: 1.4; margin-bottom: 10px;">
+                            Acumula puntos respondiendo encuestas para desbloquear niveles superiores. ¡Cada nivel te da acceso a más beneficios exclusivos!
+                        </p>
+                        <ul class="unlocks-bullet-list">
+                            <li>🎯 Acceso a encuestas de mayor recompensa</li>
+                            <li>⚡ Multiplicadores de bonificaciones diarios</li>
+                            <li>🎁 Desbloqueo de premios y sorteos exclusivos de la marca</li>
+                        </ul>
+                    </div>
+
+                    <div class="section-header">
+                        <h3>Niveles Disponibles</h3>
+                    </div>
+                    <div class="levels-table" id="levels-list-container">
+                        <!-- Loaded dynamically via app.js -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- 8. CATALOGO DE PREMIOS (REWARDS) -->
+            <!-- ========================================== -->
+            <div id="premios" class="screen">
+                <div class="sub-header">
+                    <button class="back-btn" onclick="navigateTo('dashboard')">
+                        <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: currentColor;"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+                    </button>
+                    <h2>Catálogo de Premios</h2>
+                    <div style="width: 34px;"></div>
+                </div>
+                <!-- Reward Confirmation Popup Modal -->
+                <div id="redeem-popup" class="popup-overlay">
+                    <div class="popup-card">
+                        <div class="popup-icon">
+                            <svg viewBox="0 0 24 24"><path d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.67C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 14H4V8h16v10z"/></svg>
+                        </div>
+                        <h4 class="popup-title" id="redeem-popup-title">Confirmar Canje</h4>
+                        <p class="popup-desc" id="redeem-popup-desc">¿Estás seguro de que deseas canjear este premio?</p>
+                        <div class="popup-buttons">
+                            <button class="btn btn-primary" id="redeem-confirm-btn" onclick="confirmRedeemReward()">Canjear premio</button>
+                            <button class="btn btn-secondary" onclick="closeRedeemPopup()">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="screen-content">
+                    <!-- Points Info header -->
+                    <div class="card" style="background-color: var(--bg-card); display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; border-color: var(--border-color); margin-bottom: 16px;">
+                        <div>
+                            <span class="points-label" style="font-size: 0.65rem;">Tu saldo actual</span>
+                            <h3 style="font-size: 1.4rem; color: var(--accent-color); font-weight: 800;" id="rewards-current-balance">4.250 puntos</h3>
+                        </div>
+                        <span style="font-size: 1.8rem;">🪙</span>
+                    </div>
+
+                    <!-- Category selection tabs -->
+                    <div class="tabs-scrollable">
+                        <button class="tab-pill active" onclick="filterRewards('todos', this)">Todos</button>
+                        <button class="tab-pill" onclick="filterRewards('gift-cards', this)">Gift Cards</button>
+                        <button class="tab-pill" onclick="filterRewards('dinero', this)">Dinero</button>
+                        <button class="tab-pill" onclick="filterRewards('cupones', this)">Cupones</button>
+                        <button class="tab-pill" onclick="filterRewards('sorteos', this)">Zulia Especiales</button>
+                    </div>
+
+                    <div class="rewards-grid" id="rewards-catalog-grid">
+                        <!-- Loaded dynamically via app.js -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- 9. PAGINA DE RANKING -->
+            <!-- ========================================== -->
+            <div id="ranking" class="screen">
+                <div class="sub-header">
+                    <button class="back-btn" onclick="navigateTo('dashboard')">
+                        <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: currentColor;"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+                    </button>
+                    <h2>Ranking de Usuarios</h2>
+                    <div style="width: 34px;"></div>
+                </div>
+                <div class="screen-content" style="padding-bottom: 135px;">
+                    <!-- Ranking tabs filters -->
+                    <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 20px;">
+                        <button class="tab-pill active" onclick="filterRanking('semanal', this)" style="border-radius: 12px; padding: 6px 16px;">Semanal</button>
+                        <button class="tab-pill" onclick="filterRanking('mensual', this)" style="border-radius: 12px; padding: 6px 16px;">Mensual</button>
+                        <button class="tab-pill" onclick="filterRanking('total', this)" style="border-radius: 12px; padding: 6px 16px;">Histórico</button>
+                    </div>
+
+                    <!-- Podium graphic element -->
+                    <div class="ranking-podium" id="ranking-podium-container">
+                        <!-- Loaded dynamically via app.js -->
+                    </div>
+
+                    <!-- Users Rank List -->
+                    <div class="ranking-list" id="ranking-list-container">
+                        <!-- Loaded dynamically via app.js -->
+                    </div>
+
+                    <!-- Bottom Fixed Sticky User Rank Card -->
+                    <div class="rank-list-item my-position" id="ranking-my-position" style="position: absolute; bottom: 70px; left: 0; width: 100%; border-radius: 0; border-left: none; border-right: none; border-bottom: none; z-index: 50; box-shadow: 0 -4px 15px rgba(0,0,0,0.3);">
+                        <!-- Loaded dynamically via app.js -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- 10. SISTEMA DE REFERIDOS -->
+            <!-- ========================================== -->
+            <div id="referidos" class="screen">
+                <div class="sub-header">
+                    <button class="back-btn" onclick="navigateTo('dashboard')">
+                        <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: currentColor;"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+                    </button>
+                    <h2>Invitar Amigos</h2>
+                    <div style="width: 34px;"></div>
+                </div>
+                <div class="screen-content">
+                    <div class="referral-box">
+                        <div style="font-size: 3rem; margin-bottom: 10px;">📣</div>
+                        <h3 style="font-size: 1.15rem; margin-bottom: 8px;">Comparte tu código único</h3>
+                        <p style="font-size: 0.8rem; color: var(--text-secondary); max-width: 280px; margin-bottom: 15px; line-height: 1.4;">
+                            Invita a tus amigos a la plataforma de Cerveza Zulia y ambos ganarán puntos extras en cuanto se registren.
+                        </p>
+
+                        <!-- Code display copy widget -->
+                        <div class="code-container">
+                            <span class="referral-code-display" id="referral-code">JUAN123</span>
+                            <button class="copy-btn" onclick="copyReferralCode()">
+                                <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+                            </button>
+                        </div>
+
+                        <!-- Benefits columns summary -->
+                        <div class="referral-benefits-row">
+                            <div class="benefit-card">
+                                <span class="label">Tú ganas</span>
+                                <div class="value">+200 pts</div>
+                            </div>
+                            <div class="benefit-card">
+                                <span class="label">Tu amigo gana</span>
+                                <div class="value">+100 pts</div>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary" onclick="showToast('Enlace de invitación copiado para compartir', 'success')" style="margin-bottom: 24px;">Invitar amigos</button>
+
+                        <!-- Explainer layout -->
+                        <div class="how-it-works-list">
+                            <h4>¿Cómo funciona?</h4>
+                            <div class="step-item">
+                                <span class="step-number">1</span>
+                                <span>Comparte tu código o enlace de invitación con tus amigos.</span>
+                            </div>
+                            <div class="step-item">
+                                <span class="step-number">2</span>
+                                <span>Tu amigo crea su cuenta usando tu código.</span>
+                            </div>
+                            <div class="step-item">
+                                <span class="step-number">3</span>
+                                <span>¡Listo! A ambos se les acreditará su bono de puntos.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- 11. HISTORIAL DE MOVIMIENTOS -->
+            <!-- ========================================== -->
+            <div id="historial" class="screen">
+                <div class="sub-header">
+                    <button class="back-btn" onclick="navigateTo('dashboard')">
+                        <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: currentColor;"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+                    </button>
+                    <h2>Historial de Cuenta</h2>
+                    <div style="width: 34px;"></div>
+                </div>
+                <div class="screen-content">
+                    <!-- History filter tabs -->
+                    <div class="tabs-scrollable">
+                        <button class="tab-pill active" onclick="filterHistory('todos', this)">Todos</button>
+                        <button class="tab-pill" onclick="filterHistory('puntos', this)">Puntos</button>
+                        <button class="tab-pill" onclick="filterHistory('premios', this)">Premios</button>
+                        <button class="tab-pill" onclick="filterHistory('bonos', this)">Bonos</button>
+                    </div>
+
+                    <div class="history-list" id="history-list-container">
+                        <!-- Loaded dynamically via app.js -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- 12. NOTIFICACIONES VIEW -->
+            <!-- ========================================== -->
+            <div id="notificaciones" class="screen">
+                <div class="sub-header">
+                    <button class="back-btn" onclick="navigateTo('dashboard')">
+                        <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: currentColor;"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+                    </button>
+                    <h2>Notificaciones</h2>
+                    <button class="back-btn" onclick="clearAllNotifications()" style="background-color: transparent; font-size: 0.8rem; font-weight: 600; color: var(--accent-color); border-radius: 8px; padding: 4px 10px; border: 1px solid var(--border-color); width: auto;">Limpiar</button>
+                </div>
+                <div class="screen-content">
+                    <div class="notifications-list" id="notifications-list-container">
+                        <!-- Loaded dynamically via app.js -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- 13. BONO DIARIO SCREEN -->
+            <!-- ========================================== -->
+            <div id="daily-bonus" class="screen">
+                <div class="sub-header">
+                    <button class="back-btn" onclick="navigateTo('dashboard')">
+                        <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: currentColor;"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+                    </button>
+                    <h2>Bono de Asistencia</h2>
+                    <div style="width: 34px;"></div>
+                </div>
+                <div class="screen-content" style="display: flex; flex-direction: column;">
+                    <div style="text-align: center; margin-bottom: 10px;">
+                        <span style="font-size: 3rem;">📅</span>
+                        <h3 style="font-size: 1.15rem; margin-top: 6px; margin-bottom: 4px;">¡Reclama tu bono diario!</h3>
+                        <p style="font-size: 0.8rem; color: var(--text-secondary); max-width: 280px; margin: 0 auto; line-height: 1.4;">
+                            Ingresa de forma consecutiva cada día para aumentar el valor de tu recompensa diaria.
+                        </p>
+                    </div>
+
+                    <!-- 7 Day Streak Grid -->
+                    <div class="bonus-grid" id="daily-bonus-grid">
+                        <!-- Loaded dynamically via app.js -->
+                    </div>
+
+                    <button class="btn btn-primary" id="claim-bonus-btn" onclick="claimDailyBonus()" style="margin-top: auto; margin-bottom: 20px;">Reclamar bono</button>
+                    <p style="text-align: center; font-size: 0.75rem; color: var(--text-muted);">Mantén tu racha y gana más puntos.</p>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- 14. CENTRO DE AYUDA (FAQ) -->
+            <!-- ========================================== -->
+            <div id="ayuda" class="screen">
+                <div class="sub-header">
+                    <button class="back-btn" onclick="navigateTo('dashboard')">
+                        <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: currentColor;"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+                    </button>
+                    <h2>Centro de Ayuda</h2>
+                    <div style="width: 34px;"></div>
+                </div>
+                <div class="screen-content">
+                    <div class="section-header" style="margin-top: 0;">
+                        <h3>Preguntas Frecuentes</h3>
+                    </div>
+
+                    <div class="help-list">
+                        <div class="help-item" onclick="toggleFaq(this)">
+                            <div class="help-header-row">
+                                <span>¿Cómo canjeo mis puntos por premios?</span>
+                                <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+                            </div>
+                            <div class="help-answer">
+                                Dirígete a la pestaña "Premios" en el menú inferior. Si cuentas con los puntos necesarios para el premio de tu interés, el botón "Canjear" se habilitará. Al pulsarlo y confirmar tu canje, recibirás un código de reclamo por correo electrónico.
+                            </div>
+                        </div>
+
+                        <div class="help-item" onclick="toggleFaq(this)">
+                            <div class="help-header-row">
+                                <span>¿Cuánto tardan en enviar mi premio?</span>
+                                <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+                            </div>
+                            <div class="help-answer">
+                                Las Gift Cards y cupones digitales se procesan de manera inmediata y se envían de forma automática a tu correo electrónico registrado. Las transferencias bancarias pueden tardar entre 24 y 48 horas hábiles.
+                            </div>
+                        </div>
+
+                        <div class="help-item" onclick="toggleFaq(this)">
+                            <div class="help-header-row">
+                                <span>¿Por qué no tengo encuestas disponibles?</span>
+                                <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+                            </div>
+                            <div class="help-answer">
+                                El inventario de encuestas se actualiza según tu perfil demográfico y comportamiento de consumo. Completar encuestas con respuestas coherentes y mantenerte en niveles de membresía más altos incrementa tu volumen de encuestas.
+                            </div>
+                        </div>
+
+                        <div class="help-item" onclick="toggleFaq(this)">
+                            <div class="help-header-row">
+                                <span>¿Puedo transferir mis puntos a otro usuario?</span>
+                                <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+                            </div>
+                            <div class="help-answer">
+                                No. Los puntos son personales, acumulativos e intransferibles. Están asociados directamente a tu documento de identidad (cédula) registrado.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin: 25px 0 20px; text-align: center;">
+                        <h4 style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">¿Necesitas ayuda adicional?</h4>
+                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 16px; line-height: 1.4;">Escríbenos y nuestro equipo te responderá a la brevedad.</p>
+                        <button class="btn btn-outline" onclick="showToast('Soporte contactado. Recibirás respuesta por correo.', 'success')">Contactar Soporte</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- APP BOTTOM NAVIGATION BAR (Visible inside app) -->
+            <!-- ========================================== -->
+            <nav class="bottom-nav" id="bottom-nav" style="display: none;">
+                <!-- Home / Dashboard -->
+                <button class="nav-item active" onclick="navigateTo('dashboard')">
+                    <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                    <span>Inicio</span>
+                </button>
+                <!-- Surveys -->
+                <button class="nav-item" onclick="navigateTo('surveys-list')">
+                    <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 15H7v-2h10v2zm0-4H7v-2h10v2zm0-4H7V8h10v2z"/></svg>
+                    <span>Encuestas</span>
+                </button>
+                <!-- Rewards -->
+                <button class="nav-item" onclick="navigateTo('premios')">
+                    <svg viewBox="0 0 24 24"><path d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.67C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 14H4V8h16v10z"/></svg>
+                    <span>Premios</span>
+                </button>
+                <!-- Leaderboard -->
+                <button class="nav-item" onclick="navigateTo('ranking')">
+                    <svg viewBox="0 0 24 24"><path d="M16 11V3H8v6H2v12h20V11h-6zM10 5h4v14h-4V5zM4 11h4v8H4v-8zm16 8h-4v-6h4v6z"/></svg>
+                    <span>Ranking</span>
+                </button>
+                <!-- Profile -->
+                <button class="nav-item" onclick="navigateTo('profile')">
+                    <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                    <span>Perfil</span>
+                </button>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Check desktop mode to apply dynamic container guidelines -->
+    <script>
+        if (window.innerWidth >= 500) {
+            document.querySelector('.desktop-instructions').style.display = 'block';
+        }
+    </script>
+    <script src="app.js"></script>
+</body>
+</html>
