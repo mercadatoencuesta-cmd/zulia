@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cerveza Zulia - Destapa la Original</title>
+    
+    <!-- Game Effect Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        :root {
+            --brand-yellow: #fbe122; /* Matches the exact yellow background of the bottle images */
+            --brand-navy: #091322;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--brand-yellow);
+            color: var(--brand-navy);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        /* App Wrapper - Desktop Smartphone Mock / Mobile Full-Screen */
+        .app-container {
+            width: 100%;
+            height: 100vh;
+            max-width: 100%;
+            position: relative;
+            background-color: var(--brand-yellow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: none;
+        }
+
+        @media (min-width: 500px) {
+            .app-container {
+                width: 412px;
+                height: 846px;
+                max-width: 412px;
+                max-height: 846px;
+                border-radius: 40px;
+                border: 10px solid #091322;
+                box-shadow: none;
+                margin: 20px auto;
+                overflow: hidden;
+            }
+            
+            /* Device top notch / speaker dynamic island simulator */
+            .app-container::before {
+                content: '';
+                position: absolute;
+                top: 10px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 110px;
+                height: 25px;
+                background-color: #091322;
+                border-radius: 15px;
+                z-index: 1000;
+                pointer-events: none;
+            }
+        }
+
+        /* Fullscreen Interactive Container */
+        .interactive-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 5;
+        }
+
+        /* Perfect aspect-ratio scaling to keep the cap aligned on all devices */
+        .bottle-wrapper {
+            position: relative;
+            height: 100%;
+            width: auto;
+            max-width: 100%;
+            max-height: 100%;
+            aspect-ratio: 576 / 1024;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .bottle-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            user-select: none;
+            -webkit-user-drag: none;
+            transform-origin: bottom center;
+        }
+
+        /* Interactive Cap Popping Animation Element */
+        .popping-cap {
+            position: absolute;
+            width: 6.6%; /* Proportional width relative to the bottle wrapper */
+            height: 1.76%;
+            background-color: #d1b436;
+            border: 2px solid #5a4b12;
+            border-radius: 5px 5px 0 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            top: 15.5%; /* Positioned right on the neck */
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 15;
+        }
+
+        /* Interactive Pulsing & Glowing Prompt Text */
+        .bottle-prompt-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ffffff;
+            font-size: 1.62rem;
+            font-weight: 900;
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            letter-spacing: 0.16em;
+            text-align: center;
+            pointer-events: none; /* Click falls through to bottle */
+            z-index: 50;
+            white-space: nowrap;
+            opacity: 0.95;
+            transition: opacity 0.5s ease;
+            animation: pulseGlow 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            0% {
+                transform: translate(-50%, -50%) scale(0.96);
+                text-shadow: 0 0 8px rgba(255, 255, 255, 0.8), 
+                             0 0 16px #fbe122, 
+                             0 0 25px #fbe122;
+                opacity: 0.9;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1.06);
+                text-shadow: 0 0 16px rgba(255, 255, 255, 1), 
+                             0 0 32px #fbe122, 
+                             0 0 48px #fbe122,
+                             0 0 64px #ffea00;
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Container wrapper simulator for desktop screens -->
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
+        <div style="text-align: center; margin-bottom: 15px; display: none;" class="desktop-instructions">
+            <h1 style="color: #091322; font-size: 1.8rem; margin-bottom: 5px;">Simulador Móvil Zulia</h1>
+            <p style="color: #4a5d78; font-size: 0.85rem; font-weight: 500;">Prueba la experiencia de la plataforma de encuestas en tiempo real.</p>
+        </div>
+
+        <div class="app-container">
+            <!-- Interactive Bottle Wrapper (Fullscreen inside app-container) -->
+            <div class="interactive-container">
+                <div class="bottle-wrapper" id="bottle-touch-area" onclick="advanceBottleState()">
+                    <!-- Custom Flying Cap -->
+                    <div class="popping-cap" id="metal-cap"></div>
+                    <!-- Dynamic Bottle Canvas -->
+                    <canvas class="bottle-img" id="bottle-canvas" width="576" height="1024"></canvas>
+                </div>
+                <!-- Prompt Overlay Text -->
+                <div class="bottle-prompt-text" id="bottle-prompt">¡PULSA LA BOTELLA!</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Preload bottle assets
+        const imgCap = new Image();
+        imgCap.src = "1.png";
+        
+        const imgFull = new Image();
+        imgFull.src = "2.png";
+        
+        const imgEmpty = new Image();
+        imgEmpty.src = "4.png";
+
+        let imagesLoaded = 0;
+        const totalImages = 3;
+
+        function checkLoad() {
+            imagesLoaded++;
+            if (imagesLoaded === totalImages) {
+                requestAnimationFrame(animate);
+            }
+        }
+        imgCap.onload = checkLoad;
+        imgFull.onload = checkLoad;
+        imgEmpty.onload = checkLoad;
+
+        let currentStep = 0; // 0: capped, 1: uncapped (full), 2: half-full, 3: empty (redirecting)
+        let audioCtx = null;
+
+        // Dynamic Liquid Physics & Particles
+        const bottleState = {
+            currentLevel: 180, // 180 is full neck level, 960 is empty level
+            targetLevel: 180,
+            waveAngle: 0,
+            waveAmplitude: 0,
+            bubbles: []
+        };
+
+        // Initialize 35 bubbles at random positions
+        for (let i = 0; i < 35; i++) {
+            bottleState.bubbles.push({
+                x: 200 + Math.random() * 180,
+                y: 300 + Math.random() * 650,
+                radius: Math.random() * 2.5 + 1.0,
+                speed: Math.random() * 1.5 + 0.5,
+                alpha: Math.random() * 0.45 + 0.15
+            });
+        }
+
+        // Initialize Web Audio Context on first interaction
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        // Web Audio Synthesizer for popping cap and fizz sound
+        function playUncapSound() {
+            initAudio();
+            if (!audioCtx) return;
+
+            // 1. POP Sound Effect
+            const osc = audioCtx.createOscillator();
+            const gainOsc = audioCtx.createGain();
+            
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(80, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(320, audioCtx.currentTime + 0.08);
+            
+            gainOsc.gain.setValueAtTime(1.5, audioCtx.currentTime);
+            gainOsc.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.12);
+            
+            osc.connect(gainOsc);
+            gainOsc.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.15);
+
+            // 2. High-frequency HISS / FIZZ Sound Effect (Air escaping)
+            const bufferSize = audioCtx.sampleRate * 1.5; // 1.5 seconds hiss
+            const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+            const data = buffer.getChannelData(0);
+            
+            // Populate buffer with White Noise
+            for (let i = 0; i < bufferSize; i++) {
+                data[i] = Math.random() * 2 - 1;
+            }
+            
+            const noise = audioCtx.createBufferSource();
+            noise.buffer = buffer;
+            
+            // Filter to make hiss sound like pressurized gas escaping
+            const filter = audioCtx.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.frequency.setValueAtTime(6000, audioCtx.currentTime);
+            filter.frequency.exponentialRampToValueAtTime(2500, audioCtx.currentTime + 1.2);
+            filter.Q.value = 1.0;
+            
+            const gainNoise = audioCtx.createGain();
+            gainNoise.gain.setValueAtTime(0.6, audioCtx.currentTime);
+            gainNoise.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.4);
+            
+            noise.connect(filter);
+            filter.connect(gainNoise);
+            gainNoise.connect(audioCtx.destination);
+            
+            noise.start();
+            noise.stop(audioCtx.currentTime + 1.5);
+        }
+
+        // Web Audio Synthesizer for Glug sound
+        function playGlugSound() {
+            initAudio();
+            if (!audioCtx) return;
+            
+            const now = audioCtx.currentTime;
+            
+            // Generate 3 short bubbly glugs
+            for (let i = 0; i < 3; i++) {
+                const startTime = now + (i * 0.25);
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(140 + (Math.random() * 40), startTime);
+                osc.frequency.exponentialRampToValueAtTime(240 + (Math.random() * 50), startTime + 0.18);
+                
+                gain.gain.setValueAtTime(0.001, startTime);
+                gain.gain.linearRampToValueAtTime(0.3, startTime + 0.05);
+                gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.2);
+                
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(startTime);
+                osc.stop(startTime + 0.22);
+            }
+        }
+
+        // Advance sequence states on each click (1 click per state)
+        function advanceBottleState() {
+            if (currentStep === 3) return; // Already empty and redirecting
+            
+            // Hide the tap prompt text on the first click
+            const prompt = document.getElementById('bottle-prompt');
+            if (prompt) {
+                prompt.style.opacity = '0';
+                setTimeout(() => prompt.remove(), 500);
+            }
+            
+            initAudio();
+            
+            if (currentStep === 0) {
+                // Click 1: Pop the cap
+                currentStep = 1;
+                
+                playUncapSound();
+                triggerPopAnimations();
+                
+                // Initialize canvas level
+                bottleState.currentLevel = 180;
+                bottleState.targetLevel = 180;
+            } 
+            else if (currentStep === 1) {
+                // Click 2: Drink to half-full
+                currentStep = 2;
+                
+                playGlugSound();
+                triggerDrinkBubbles();
+                
+                bottleState.targetLevel = 565; // ~50% full
+                
+                gsap.to(bottleState, {
+                    currentLevel: bottleState.targetLevel,
+                    duration: 1.5,
+                    ease: "power2.inOut",
+                    onStart: () => {
+                        // Start sloshing wave
+                        gsap.to(bottleState, { waveAmplitude: 15, duration: 0.3 });
+                        
+                        // Shake bottle gently while draining
+                        gsap.fromTo("#bottle-canvas",
+                            { rotation: -0.6 },
+                            { duration: 0.11, rotation: 0.6, repeat: 10, yoyo: true, ease: "sine.inOut" }
+                        );
+                    },
+                    onComplete: () => {
+                        gsap.killTweensOf("#bottle-canvas");
+                        gsap.set("#bottle-canvas", { rotation: 0 });
+                        gsap.to(bottleState, { waveAmplitude: 2, duration: 1.2, ease: "power1.out" });
+                    }
+                });
+            } 
+            else if (currentStep === 2) {
+                // Click 3: Drink to empty
+                currentStep = 3;
+                
+                playGlugSound();
+                triggerDrinkBubbles();
+                
+                bottleState.targetLevel = 960; // 0% full (Empty)
+                
+                gsap.to(bottleState, {
+                    currentLevel: bottleState.targetLevel,
+                    duration: 1.5,
+                    ease: "power2.inOut",
+                    onStart: () => {
+                        // Start sloshing wave
+                        gsap.to(bottleState, { waveAmplitude: 15, duration: 0.3 });
+                        
+                        // Shake bottle gently while draining
+                        gsap.fromTo("#bottle-canvas",
+                            { rotation: -0.6 },
+                            { duration: 0.11, rotation: 0.6, repeat: 10, yoyo: true, ease: "sine.inOut" }
+                        );
+                    },
+                    onComplete: () => {
+                        gsap.killTweensOf("#bottle-canvas");
+                        gsap.set("#bottle-canvas", { rotation: 0 });
+                        gsap.to(bottleState, { waveAmplitude: 0, duration: 0.6 });
+                        
+                        // Celebratory Confetti!
+                        confetti({
+                            particleCount: 150,
+                            spread: 80,
+                            origin: { y: 0.65 },
+                            colors: ['#fbe122', '#ffffff', '#091322']
+                        });
+                        
+                        // Redirect to login page after 1.5 seconds
+                        gsap.delayedCall(1.5, () => {
+                            window.location.href = "index.html#login";
+                        });
+                    }
+                });
+            }
+        }
+
+        // Handle cap pop and bottle shake animations
+        function triggerPopAnimations() {
+            const cap = document.getElementById('metal-cap');
+            
+            // Bring DOM cap to neck position and launch it
+            gsap.set(cap, { opacity: 1, scale: 1, x: 0, y: 0, rotation: 0 });
+            
+            gsap.to(cap, {
+                duration: 1.3,
+                x: -160,
+                y: 380,
+                rotation: -540,
+                scale: 0.7,
+                opacity: 0,
+                ease: "power1.out",
+                onComplete: () => {
+                    gsap.set(cap, { opacity: 0 });
+                }
+            });
+            
+            // Major bottle shake
+            gsap.fromTo("#bottle-canvas",
+                { rotation: -2.5 },
+                { duration: 0.05, rotation: 2.5, repeat: 9, yoyo: true, ease: "power1.inOut", onComplete: () => {
+                    gsap.set("#bottle-canvas", { rotation: 0 });
+                }}
+            );
+        }
+
+        // Bubbles escaping neck during drink animation
+        function triggerDrinkBubbles() {
+            const container = document.getElementById('bottle-touch-area');
+            for (let i = 0; i < 8; i++) {
+                const bubble = document.createElement('div');
+                bubble.style.position = 'absolute';
+                bubble.style.width = `${Math.random() * 8 + 4}px`;
+                bubble.style.height = `${Math.random() * 8 + 4}px`;
+                bubble.style.backgroundColor = 'rgba(9, 19, 34, 0.2)';
+                bubble.style.borderRadius = '50%';
+                bubble.style.top = '15%';
+                bubble.style.left = `${50 + (Math.random() * 6 - 3)}%`;
+                bubble.style.pointerEvents = 'none';
+                bubble.style.zIndex = '20';
+                
+                // Animate rising out of the bottle neck
+                bubble.animate([
+                    { transform: 'translateY(0) scale(1)', opacity: 0.8 },
+                    { transform: `translateY(-120px) translateX(${(Math.random() * 40 - 20)}px) scale(0.5)`, opacity: 0 }
+                ], {
+                    duration: 800 + Math.random() * 400,
+                    easing: 'ease-out',
+                    fill: 'forwards'
+                });
+                
+                container.appendChild(bubble);
+                setTimeout(() => bubble.remove(), 1200);
+            }
+        }
+
+        // Canvas Rendering Loop
+        function drawBottle() {
+            const canvas = document.getElementById('bottle-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            if (currentStep === 0) {
+                // Initial State: Draw bottle with cap
+                ctx.drawImage(imgCap, 0, 0);
+            } else {
+                // Animating: Draw empty bottle as base
+                ctx.drawImage(imgEmpty, 0, 0);
+                
+                // Draw liquid content if not completely empty
+                if (bottleState.currentLevel < 960) {
+                    ctx.save();
+                    
+                    // Create clipping path representing bottle liquid volume
+                    ctx.beginPath();
+                    ctx.moveTo(140, 1000);
+                    ctx.lineTo(430, 1000);
+                    ctx.lineTo(430, bottleState.currentLevel);
+                    
+                    // Animate wave angle
+                    bottleState.waveAngle += 0.08;
+                    
+                    // Sine wave top surface
+                    const steps = 30;
+                    const startX = 430;
+                    const endX = 140;
+                    const dx = (endX - startX) / steps;
+                    for (let i = 0; i <= steps; i++) {
+                        const px = startX + i * dx;
+                        const py = bottleState.currentLevel + Math.sin(bottleState.waveAngle + (i * 0.35)) * bottleState.waveAmplitude;
+                        ctx.lineTo(px, py);
+                    }
+                    ctx.lineTo(140, 1000);
+                    ctx.closePath();
+                    ctx.clip();
+                    
+                    // Draw full bottle content inside clipped region
+                    ctx.drawImage(imgFull, 0, 0);
+                    
+                    // Render carbonation bubble particles inside liquid
+                    bottleState.bubbles.forEach(b => {
+                        b.y -= b.speed;
+                        b.x += Math.sin(b.y * 0.03) * 0.45;
+                        
+                        // Recirculate bubbles when they hit the surface wave
+                        const waveY = bottleState.currentLevel + Math.sin(bottleState.waveAngle + ((b.x - 140) / 290 * 30 * 0.35)) * bottleState.waveAmplitude;
+                        if (b.y < waveY) {
+                            b.y = 950 - Math.random() * 50;
+                            b.x = 180 + Math.random() * 210;
+                        }
+                        
+                        ctx.beginPath();
+                        ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
+                        ctx.fillStyle = `rgba(255, 255, 255, ${b.alpha})`;
+                        ctx.fill();
+                    });
+                    
+                    ctx.restore();
+                    
+                    // Draw foam/head line at the liquid surface
+                    ctx.save();
+                    ctx.beginPath();
+                    const startXFoam = 158;
+                    const endXFoam = 418;
+                    const stepsFoam = 20;
+                    const dxFoam = (endXFoam - startXFoam) / stepsFoam;
+                    ctx.moveTo(startXFoam, bottleState.currentLevel);
+                    for (let i = 0; i <= stepsFoam; i++) {
+                        const px = startXFoam + i * dxFoam;
+                        const py = bottleState.currentLevel + Math.sin(bottleState.waveAngle + (i * 0.35)) * bottleState.waveAmplitude;
+                        if (i === 0) ctx.moveTo(px, py);
+                        else ctx.lineTo(px, py);
+                    }
+                    ctx.strokeStyle = "rgba(245, 238, 185, 0.85)"; // Creamy froth color
+                    ctx.lineWidth = 5;
+                    ctx.stroke();
+                    ctx.restore();
+                }
+            }
+        }
+
+        function animate() {
+            drawBottle();
+            requestAnimationFrame(animate);
+        }
+
+        // Show instructions on desktop screens
+        if (window.innerWidth >= 500) {
+            document.querySelector('.desktop-instructions').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
